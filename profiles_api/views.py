@@ -2,6 +2,7 @@ from django.shortcuts import render
 from .serializers import HelloSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.viewsets import ViewSet 
 from rest_framework import status
 from rest_framework.status import HTTP_400_BAD_REQUEST
 # Create your views here.
@@ -49,3 +50,14 @@ class HelloApiView(APIView):
     def delete(self,request,pk=None):
         "method is delete"
         return Response({'method':'delete'})
+    
+class HelloViewSet(ViewSet):
+    "This is a simple view set"
+    def list(self,request):
+        "Returns a hello message"
+        a_viewset = [
+            'Uses actions (list, create, retrieve, update, partial_update)',
+            'Automatically maps to URLs using routers',
+            'Provides more functionality with less code.'
+        ]
+        return Response({'message':'Hello!','a_viewset':a_viewset})
