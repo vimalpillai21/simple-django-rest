@@ -1,10 +1,15 @@
 from django.shortcuts import render
-from .serializers import HelloSerializer
+from .serializers import HelloSerializer, ProfileSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.viewsets import ViewSet 
+from rest_framework.viewsets import ViewSet, ModelViewSet 
 from rest_framework import status
 from rest_framework.status import HTTP_400_BAD_REQUEST
+from .models import UserProfile
+from .permissions import UpdateOwnProfile
+from rest_framework.authentication import TokenAuthentication
+from rest_framework import filters
+
 # Create your views here.
 
 class HelloApiView(APIView):
@@ -90,3 +95,10 @@ class HelloViewSet(ViewSet):
         "Handles deletion object by its id"
         return Response({'http_method':'DELETE'})
     
+class UserProfileViewSet(ModelViewSet):
+    serializer_class = ProfileSerializer
+    queryset = UserProfile.objects.all()
+    permission_classes = (UpdateOwnProfile,)
+    authentication_classes = (TokenAuthentication,)
+    filter_backends = (filters.SearchFilter,)
+    search_fields = ('name','email',)
